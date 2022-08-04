@@ -92,6 +92,7 @@ func searchDB(oui string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer f.Close()
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		line := scanner.Text()
