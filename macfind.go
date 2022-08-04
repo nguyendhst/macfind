@@ -45,7 +45,7 @@ func Search(hw string) (string, error) {
 	// perform a local search first
 	if DB_AVAIL {
 		if localRes, err := searchDB(oui); err == nil {
-			return localRes + " --from db", nil
+			return localRes + " -- from db", nil
 		}
 	}
 	// perform a remote search
@@ -82,7 +82,7 @@ func Search(hw string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(vendor) + " --from api", nil
+	return string(vendor) + " -- from api", nil
 }
 
 // SearchDB searches the local database (macfind_local) for the vendor name of the given MAC address.
