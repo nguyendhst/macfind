@@ -1,8 +1,7 @@
 # Go MAC Address Lookup Package 
-## Database (macfind_local) is taken from:
-```
-https://gitlab.com/wireshark/wireshark/-/raw/master/manuf
-```
+### The database (macfind_local) is taken from:
+
+[Wireshark manufacturer database](https://gitlab.com/wireshark/wireshark/-/raw/master/manuf)
 ### Example:
 ```golang
 package main
