@@ -71,6 +71,8 @@ func Search(hw string) (string, error) {
 	}
 	defer res.Body.Close()
 
+	// some devices using Android Q, iOS 14 and Windows 10 use randomized MAC addresses for enhanced privacy
+	// status codes may differ depending on the API provider
 	if res.StatusCode == http.StatusNotFound {
 		return "?(randomized MAC)", nil
 	} else if res.StatusCode != http.StatusOK {
