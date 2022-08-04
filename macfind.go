@@ -22,14 +22,14 @@ const (
 var DB_AVAIL = true
 var LOCAL_DB_PATH = ""
 
-func init() {
+func initialize() {
 	// check db availability
 	_, callerPath, _, ok := runtime.Caller(0)
 	if !ok {
 		fmt.Println("runtime.Caller() failed -- exiting")
 		os.Exit(1)
 	}
-	LOCAL_DB_PATH := fmt.Sprintf("%s/%s", path.Dir(callerPath), LOCAL_DB)
+	LOCAL_DB_PATH = fmt.Sprintf("%s/%s", path.Dir(callerPath), LOCAL_DB)
 	if _, err := os.Stat(LOCAL_DB_PATH); err != nil {
 		DB_AVAIL = false
 	}
@@ -37,6 +37,7 @@ func init() {
 
 // Search searches the remote API for the vendor name of the given MAC address.
 func Search(hw string) (string, error) {
+	initialize()
 	oui, err := parse(hw)
 	if err != nil {
 		return "", err
@@ -44,7 +45,7 @@ func Search(hw string) (string, error) {
 	// perform a local search first
 	if DB_AVAIL {
 		if localRes, err := searchDB(oui); err == nil {
-			return localRes + "--from db", nil
+			return localRes + " --from db", nil
 		}
 	}
 	// perform a remote search
