@@ -14,3 +14,11 @@ func TestSearch(t *testing.T) {
 	}
 	fmt.Println(vendor)
 }
+
+func TestRandomizedMac(t *testing.T) {
+	ven, err := mf.Search("6A:D5:DC:A5:F9:1B")
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(ven)
+}

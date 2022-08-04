@@ -104,6 +104,8 @@ func searchDB(oui string) (string, error) {
 	}
 	if err := scanner.Err(); err != nil {
 		return "", err
+	} else if res == "" {
+		return "?(randomized MAC)", nil
 	}
 	return res, nil
 }
