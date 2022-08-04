@@ -22,7 +22,7 @@ const (
 var DB_AVAIL = true
 var LOCAL_DB_PATH = ""
 
-func initialize() {
+func initializeDB() {
 	// check db availability
 	_, callerPath, _, ok := runtime.Caller(0)
 	if !ok {
@@ -35,9 +35,9 @@ func initialize() {
 	}
 }
 
-// Search searches the remote API for the vendor name of the given MAC address.
+// Search searches the local database and in the case of not finding one, queries the remote API for the vendor name of the given MAC address.
 func Search(hw string) (string, error) {
-	initialize()
+	initializeDB()
 	oui, err := parse(hw)
 	if err != nil {
 		return "", err
