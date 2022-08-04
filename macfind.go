@@ -63,7 +63,7 @@ func Search(hw string) (string, error) {
 	select {
 	case <-done:
 	case <-time.After(TIMEOUT):
-		return searchDB(hw)
+		return "", fmt.Errorf("API connection timeout (5 secs)")
 	}
 
 	if err != nil {
