@@ -40,7 +40,7 @@ func Search(hw string) (string, error) {
 	initializeDB()
 	oui, err := parse(hw)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Search: failed to parse MAC address; %w", err)
 	}
 	// perform a local search first
 	if DB_AVAIL {
@@ -63,11 +63,11 @@ func Search(hw string) (string, error) {
 	select {
 	case <-done:
 	case <-time.After(TIMEOUT):
-		return "", fmt.Errorf("API connection timeout (5 secs)")
+		return "", fmt.Errorf("Search: API connection timeout (5 secs); %w", err)
 	}
 
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("Search: failed to connect to API; %w", err)
 	}
 	defer res.Body.Close()
 
@@ -76,13 +76,13 @@ func Search(hw string) (string, error) {
 	if res.StatusCode == http.StatusNotFound {
 		return "?(randomized MAC)", nil
 	} else if res.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
+		return "", fmt.Errorf("Search: status code error: %d %s", res.StatusCode, res.Status)
 	}
 
 	var vendor []byte
 	vendor, err = io.ReadAll(res.Body)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("main: failed to read response body; %w", err)
 	}
 	return string(vendor), nil
 }
@@ -92,7 +92,7 @@ func searchDB(oui string) (string, error) {
 	var res string
 	f, err := os.Open(LOCAL_DB_PATH)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("searchDB: failed to open local database; %w", err)
 	}
 	defer f.Close()
 	scanner := bufio.NewScanner(f)
@@ -106,7 +106,7 @@ func searchDB(oui string) (string, error) {
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		return "", err
+		return "", fmt.Errorf("searchDB: failed to scan local database; %w", err)
 	} else if res == "" {
 		return "?(randomized MAC)", nil
 	}
@@ -117,10 +117,10 @@ func searchDB(oui string) (string, error) {
 func parse(hw string) (string, error) {
 	validMAC, err := regexp.Compile(`^[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}$`)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("parse: regex compilation failed; %w", err)
 	}
 	if !validMAC.MatchString(hw) {
-		return "", fmt.Errorf("invalid MAC address: %s", hw)
+		return "", fmt.Errorf("parse: invalid MAC address: %s; %w", hw, err)
 	}
 	// get OUI from MAC address
 	return hw[0:8], nil

@@ -22,3 +22,12 @@ func TestRandomizedMac(t *testing.T) {
 	}
 	fmt.Println(ven)
 }
+
+func TestBadMACAddress(t *testing.T) {
+	ven, err := mf.Search("6A:D5:DC:Avv:F9:1B:1B")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		t.Error(ven)
+	}
+}
